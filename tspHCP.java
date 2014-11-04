@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Scanner;
  
 /**
  * newTsp class uses the nearest neighbor method. 
@@ -21,6 +22,7 @@ public class tspHCP
  
     ArrayList vert_a = new ArrayList<Integer>();
     ArrayList vert_b = new ArrayList<Integer>();
+    ArrayList vals = new ArrayList<Integer>();
     public static void main(String[] args)
     {   
          
@@ -31,6 +33,11 @@ public class tspHCP
             System.out.println(tsp.vert_b.get(i));
         }
         tsp.populateEdge();
+        tsp.getvals();
+        tsp.createfile();
+       // for(int i=0; i<tsp.vals.size(); i++){
+       // 	System.out.println(tsp.vals.get(i));
+       // }
          
         /*tsp.readfile("mini1.txt");
         float matrix[][] = tsp.generateMatrix();
@@ -54,6 +61,38 @@ public class tspHCP
      * yPos array with the coordinates.
      * @param string
      */
+    private void createfile(){
+    	Scanner in = new Scanner(System.in);
+    	System.out.println("provide filename");
+    	String fileName = in.nextLine();
+    	System.out.println("provide comment");
+    	String comment = in.nextLine();
+    	in.close();
+    	
+    	try{
+    		File file = new File(fileName + ".txt");
+    		BufferedWriter out = new BufferedWriter(new FileWriter(file));
+    		out.write("NAME:"+fileName+"\n");
+    		out.write("COMMENT:"+comment+"\n");
+    		out.write("TYPE:TSP\n");
+    		out.write("DIMENSION:"+edges.length+"\n");
+    		out.write("EDGE_WEIGHT_TYPE: EXPLICIT\n");
+    		out.write("EDGE_WEIGHT_FORMAT: LOWER_DIAG_ROW\n");
+    		out.write("EDGE_WEIGHT_SECTION\n");
+    		for(int i=0; i< vals.size(); i++){
+    			String write_val = vals.get(i).toString();
+    			out.write(write_val+"\n");
+    		}
+    		out.write("EOF\n");
+    		out.close();
+    		
+    	} catch(IOException e)
+    	{
+    		System.out.println("cheese error");
+    	}    	
+    	
+    	
+    }
     private void readfile(String fileName)
     {
         File file = new File(fileName);
@@ -153,10 +192,15 @@ public class tspHCP
         for(int i=0; i<vert_a.size()-1; i++){
                 edges[(int) vert_b.get(i)][(int) vert_a.get(i)] = 1;
             }
-         
+        for(int i=0; i<vert_a.size()-1; i++){
+            edges[(int) vert_a.get(i)][(int) vert_b.get(i)] = 1;
+        } 
         for(int a=0; a<edges.length; a++){
             for(int b=0; b<edges[a].length; b++){
-                if(edges[a][b] == 0){
+            	if(a == b){
+            		edges[a][b] = 0;
+            	}
+                if(edges[a][b] == 0 && a != b){
                     edges[a][b] = 2;
                 } else {
                      
@@ -171,6 +215,21 @@ public class tspHCP
                 System.out.println();
             }
         }
+    private void getvals(){
+    	int row = 0;
+    	int col = 0;
+    	while(row < edges.length){
+    		if(edges[row][col] == 0){
+    			vals.add(edges[row][col]);
+    			row++;
+    			col = 0;
+    			} else {
+    				vals.add(edges[row][col]);
+    				col++;
+    			}
+    		}
+    	}
+    	
      
     /**
      * Populates the cost matrix with the edge
