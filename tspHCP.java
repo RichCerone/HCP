@@ -19,6 +19,7 @@ public class tspHCP
     int[] bestPath;
      
     int[][] edges;
+    int dimension;
  
     ArrayList vert_a = new ArrayList<Integer>();
     ArrayList vert_b = new ArrayList<Integer>();
@@ -27,7 +28,7 @@ public class tspHCP
     {   
          
         tspHCP tsp = new tspHCP();
-        tsp.readf_hcp("petersen.txt");
+        tsp.readf_hcp("squareWithDiagonal.txt");
         for(int i=0; i<tsp.vert_a.size(); i++){
             System.out.print(tsp.vert_a.get(i) + " ");
             System.out.println(tsp.vert_b.get(i));
@@ -160,8 +161,8 @@ public class tspHCP
                 if(current_line.contains("DIMENSION :")){
                     String[] splt = current_line.split("DIMENSION :");
                     String dim = splt[1].trim();
-                    int dimension = Integer.parseInt(dim);
-                     edges = new int[dimension+1][dimension+1];
+                     dimension = Integer.parseInt(dim);
+                     edges = new int[dimension][dimension];
                 }
                 if(startread){
                     if(current_line.contains("EOF") || current_line.contains("-1"))
@@ -189,11 +190,11 @@ public class tspHCP
     }
      
     private void populateEdge(){
-        for(int i=0; i<vert_a.size()-1; i++){
-                edges[(int) vert_b.get(i)][(int) vert_a.get(i)] = 1;
+        for(int i=0; i<vert_a.size(); i++){
+                edges[(int) vert_b.get(i)-1][(int) vert_a.get(i)-1] = 1;
             }
-        for(int i=0; i<vert_a.size()-1; i++){
-            edges[(int) vert_a.get(i)][(int) vert_b.get(i)] = 1;
+        for(int i=0; i<vert_a.size(); i++){
+            edges[(int) vert_a.get(i)-1][(int) vert_b.get(i)-1] = 1;
         } 
         for(int a=0; a<edges.length; a++){
             for(int b=0; b<edges[a].length; b++){
