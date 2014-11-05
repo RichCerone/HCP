@@ -51,7 +51,7 @@ public class tspHCP
     		}
     		out.write("EOF\n");
     		out.close();
-    		
+    		System.out.println(file.getName() + " has been created");
     	} catch(IOException e)
     	{
     		System.out.println("cheese error");
